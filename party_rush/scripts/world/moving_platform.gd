@@ -1,3 +1,4 @@
+class_name MovingPlatform
 extends AnimatableBody3D
 
 @export var move_offset: Vector3 = Vector3(6.0, 0.0, 0.0)

@@ -9,6 +9,7 @@ var _winner_claimed: bool = false
 
 
 func _ready() -> void:
+	super()
 	round_duration = 90.0
 	_flag_area.body_entered.connect(_on_flag_entered)
 	_animate_flag()

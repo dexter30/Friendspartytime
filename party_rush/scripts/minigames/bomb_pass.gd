@@ -14,6 +14,7 @@ var _exploded: bool = false
 
 
 func _ready() -> void:
+	super()
 	round_duration = 60.0
 	_bomb_visual.visible = false
 	var mat := StandardMaterial3D.new()
@@ -36,6 +37,7 @@ func start_round() -> void:
 
 
 func _physics_process(delta: float) -> void:
+	super(delta)
 	if not is_running or is_finished or _bomb_holder == null:
 		return
 
@@ -111,8 +113,8 @@ func _explode_bomb() -> void:
 
 func _play_explosion() -> void:
 	var camera := get_viewport().get_camera_3d()
-	if camera is MultiplayerCamera:
-		(camera as MultiplayerCamera).add_trauma(0.8)
+	if camera is ArenaCamera:
+		(camera as ArenaCamera).add_trauma(0.8)
 	var tween := _bomb_visual.create_tween().set_parallel(true)
 	tween.tween_property(_bomb_visual, "scale", Vector3.ONE * 8.0, 0.35) \
 		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)

@@ -8,6 +8,7 @@ var _finish_order: Array[int] = []
 
 
 func _ready() -> void:
+	super()
 	round_duration = 120.0
 	_finish_area.body_entered.connect(_on_finish_entered)
 

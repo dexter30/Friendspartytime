@@ -1,7 +1,7 @@
 extends Node3D
 
 @onready var _player_scene: PackedScene = preload("res://scenes/player/player.tscn")
-@onready var _camera: MultiplayerCamera = $MultiplayerCamera
+@onready var _camera: ArenaCamera = $ArenaCamera
 @onready var _hud: CanvasLayer = $HUD
 @onready var _minigame_container: Node3D = $MinigameContainer
 @onready var _countdown_label: Label = $HUD/CountdownLabel
@@ -46,7 +46,7 @@ func _load_next_minigame() -> void:
 	_current_minigame.minigame_finished.connect(_on_minigame_finished)
 
 	_current_minigame.setup_round(_players)
-	_camera.set_targets(_current_minigame.get_camera_targets())
+	_camera.frame_bounds(_current_minigame.get_map_bounds(), GameState.rounds_played > 0)
 
 	var minigame_name := GameState.MINIGAME_NAMES[(GameState.current_minigame_index - 1 + GameState.MINIGAME_NAMES.size()) % GameState.MINIGAME_NAMES.size()]
 	_set_status(minigame_name)
