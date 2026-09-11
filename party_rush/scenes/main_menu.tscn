@@ -27,13 +27,13 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -280.0
-offset_top = -220.0
-offset_right = 280.0
-offset_bottom = 220.0
+offset_left = -420.0
+offset_top = -300.0
+offset_right = 420.0
+offset_bottom = 300.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 16
+theme_override_constants/separation = 14
 alignment = 1
 
 [node name="Title" type="Label" parent="VBox"]
@@ -47,23 +47,84 @@ horizontal_alignment = 1
 layout_mode = 2
 theme_override_colors/font_color = Color(0.75, 0.8, 0.9, 1)
 theme_override_font_sizes/font_size = 18
-text = "3-Player Local Co-op Party Platformer"
+text = "Local multiplayer party games — pick one"
 horizontal_alignment = 1
 
-[node name="StartButton" type="Button" parent="VBox"]
+[node name="Games" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+theme_override_constants/separation = 24
+alignment = 1
+
+[node name="PartyCard" type="PanelContainer" parent="VBox/Games"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="VBox/Games/PartyCard"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Name" type="Label" parent="VBox/Games/PartyCard/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.55, 0.85, 1, 1)
+theme_override_font_sizes/font_size = 26
+text = "Party Rush"
+horizontal_alignment = 1
+
+[node name="Description" type="Label" parent="VBox/Games/PartyCard/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.75, 0.8, 0.9, 1)
+theme_override_font_sizes/font_size = 14
+text = "3-player co-op mini-game gauntlet.
+Race, tag, and pass the bomb — first to 3 wins."
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="StartButton" type="Button" parent="VBox/Games/PartyCard/VBox"]
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 theme_override_font_sizes/font_size = 22
 text = "Start Party"
+
+[node name="SamuraiCard" type="PanelContainer" parent="VBox/Games"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="VBox/Games/SamuraiCard"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Name" type="Label" parent="VBox/Games/SamuraiCard/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.55, 0.45, 1)
+theme_override_font_sizes/font_size = 26
+text = "Samurai Gun   NEW"
+horizontal_alignment = 1
+
+[node name="Description" type="Label" parent="VBox/Games/SamuraiCard/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.75, 0.8, 0.9, 1)
+theme_override_font_sizes/font_size = 14
+text = "2D arena fighter, Smash-style. Katana light attacks,
+gun heavy attacks, 5 stocks each. Pick from 8 fighters."
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="SamuraiButton" type="Button" parent="VBox/Games/SamuraiCard/VBox"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Enter the Dojo"
 
 [node name="ControlsLabel" type="Label" parent="VBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.7, 0.75, 0.85, 1)
 theme_override_font_sizes/font_size = 14
 text = "Controls"
+horizontal_alignment = 1
 
 [node name="MinigamesLabel" type="Label" parent="VBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.7, 0.75, 0.85, 1)
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 13
 text = "Mini-Games"
+horizontal_alignment = 1
