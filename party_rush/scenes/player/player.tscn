@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://player001"]
+[gd_scene load_steps=9 format=3 uid="uid://player001"]
 
 [ext_resource type="Script" path="res://scripts/player/player_controller.gd" id="1_player"]
 
@@ -9,6 +9,22 @@ height = 1.6
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_body"]
 radius = 0.45
 height = 1.6
+
+[sub_resource type="SphereMesh" id="SphereMesh_eye"]
+radius = 0.1
+height = 0.2
+
+[sub_resource type="SphereMesh" id="SphereMesh_pupil"]
+radius = 0.05
+height = 0.1
+
+[sub_resource type="StandardMaterial3D" id="Material_eye"]
+albedo_color = Color(0.97, 0.97, 0.97, 1)
+roughness = 0.2
+
+[sub_resource type="StandardMaterial3D" id="Material_pupil"]
+albedo_color = Color(0.08, 0.08, 0.1, 1)
+roughness = 0.3
 
 [sub_resource type="SphereMesh" id="SphereMesh_indicator"]
 radius = 0.25
@@ -21,9 +37,31 @@ script = ExtResource("1_player")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 shape = SubResource("CapsuleShape3D_player")
 
-[node name="Body" type="MeshInstance3D" parent="."]
+[node name="Visuals" type="Node3D" parent="."]
+
+[node name="Body" type="MeshInstance3D" parent="Visuals"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 mesh = SubResource("CapsuleMesh_body")
+
+[node name="EyeLeft" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.16, 1.15, -0.38)
+material_override = SubResource("Material_eye")
+mesh = SubResource("SphereMesh_eye")
+
+[node name="PupilLeft" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.16, 1.15, -0.455)
+material_override = SubResource("Material_pupil")
+mesh = SubResource("SphereMesh_pupil")
+
+[node name="EyeRight" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.16, 1.15, -0.38)
+material_override = SubResource("Material_eye")
+mesh = SubResource("SphereMesh_eye")
+
+[node name="PupilRight" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.16, 1.15, -0.455)
+material_override = SubResource("Material_pupil")
+mesh = SubResource("SphereMesh_pupil")
 
 [node name="NameLabel" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2, 0)
