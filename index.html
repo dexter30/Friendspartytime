@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Friends Party Time - Arena Clash</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main id="app">
+      <section id="main-menu" class="screen active">
+        <h1>Friends Party Time</h1>
+        <p class="subtitle">Main Menu</p>
+        <button id="start-arena-button" class="primary-button">
+          Samurai Gun Arena
+        </button>
+      </section>
+
+      <section id="character-select" class="screen">
+        <h2>Choose Fighters</h2>
+        <p class="subtitle">Player 1 and Player 2 pick your shape champions.</p>
+        <div class="picker-row">
+          <div class="picker-column">
+            <h3>Player 1</h3>
+            <div id="p1-options" class="fighter-grid"></div>
+          </div>
+          <div class="picker-column">
+            <h3>Player 2</h3>
+            <div id="p2-options" class="fighter-grid"></div>
+          </div>
+        </div>
+        <div class="select-actions">
+          <button id="begin-match-button" class="primary-button" disabled>
+            Begin 5-Stock Match
+          </button>
+          <button id="back-to-menu-button" class="secondary-button">Back</button>
+        </div>
+      </section>
+
+      <section id="arena-screen" class="screen">
+        <div id="hud">
+          <div class="hud-player" id="hud-p1"></div>
+          <div class="hud-center">
+            <button id="return-menu-button" class="secondary-button">Main Menu</button>
+            <p class="controls-text">
+              P1: A/D move, W jump, F light, G heavy · P2: J/L move, I jump, O light, P heavy
+            </p>
+          </div>
+          <div class="hud-player" id="hud-p2"></div>
+        </div>
+        <canvas id="arena-canvas" width="1200" height="700"></canvas>
+      </section>
+    </main>
+
+    <script src="./game.js"></script>
+  </body>
+</html>
