@@ -1,18 +1,31 @@
 class_name TagFrenzy
 extends MinigameBase
 
-## One player is "it". Tag others to pass the role. Most tags when time runs out wins.
+## One player is "it" and moves slightly faster. Touch another player to pass the role.
+## Most tags when time runs out wins. The arena is fenced so nobody falls off.
+
+const TAG_COOLDOWN := 1.0
 
 var tag_counts: Array[int] = [0, 0, 0]
 var _it_player: PlayerController = null
+var _tag_cooldown: float = 0.0
 
 
 func _ready() -> void:
+	super()
 	round_duration = 45.0
+
+
+func _physics_process(delta: float) -> void:
+	super(delta)
+	if _tag_cooldown > 0.0:
+		_tag_cooldown -= delta
 
 
 func setup_round(spawned_players: Array[PlayerController]) -> void:
 	tag_counts = [0, 0, 0]
+	_tag_cooldown = 0.0
+	_it_player = null
 	super.setup_round(spawned_players)
 
 
@@ -26,16 +39,23 @@ func _connect_player(player: PlayerController) -> void:
 
 
 func _on_player_collision(player: PlayerController, other: PlayerController) -> void:
-	if not is_running:
+	if not is_running or _tag_cooldown > 0.0 or _it_player == null:
 		return
+
+	var tagger: PlayerController
+	var tagged: PlayerController
 	if player == _it_player and other != _it_player:
-		tag_counts[player.player_index] += 1
-		_set_it_player(other)
-		player.apply_bump(other.global_position)
+		tagger = player
+		tagged = other
 	elif other == _it_player and player != _it_player:
-		tag_counts[other.player_index] += 1
-		_set_it_player(player)
-		other.apply_bump(player.global_position)
+		tagger = other
+		tagged = player
+	else:
+		return
+
+	tag_counts[tagger.player_index] += 1
+	_tag_cooldown = TAG_COOLDOWN
+	_set_it_player(tagged)
 
 
 func _set_it_player(player: PlayerController) -> void:
