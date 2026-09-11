@@ -1,0 +1,137 @@
+[gd_scene load_steps=10 format=3 uid="uid://platformrace001"]
+
+[ext_resource type="Script" path="res://scripts/minigames/platform_race.gd" id="1_script"]
+[ext_resource type="Script" path="res://scripts/world/moving_platform.gd" id="2_moving"]
+[ext_resource type="Script" path="res://scripts/world/kill_zone.gd" id="3_kill"]
+[ext_resource type="Script" path="res://scripts/world/level_styler.gd" id="4_style"]
+
+[sub_resource type="BoxShape3D" id="BoxShape_large"]
+size = Vector3(10, 1, 10)
+
+[sub_resource type="BoxMesh" id="BoxMesh_large"]
+size = Vector3(10, 1, 10)
+
+[sub_resource type="BoxShape3D" id="BoxShape_small"]
+size = Vector3(3.5, 0.6, 3.5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_small"]
+size = Vector3(3.5, 0.6, 3.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape_finish"]
+size = Vector3(8, 3, 2)
+
+[sub_resource type="BoxShape3D" id="BoxShape_kill"]
+size = Vector3(60, 2, 140)
+
+[node name="PlatformRace" type="Node3D"]
+script = ExtResource("1_script")
+
+[node name="LevelStyler" type="Node3D" parent="."]
+script = ExtResource("4_style")
+
+[node name="SpawnPoints" type="Node3D" parent="."]
+
+[node name="Spawn1" type="Marker3D" parent="SpawnPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 1.5, 2)
+
+[node name="Spawn2" type="Marker3D" parent="SpawnPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 2)
+
+[node name="Spawn3" type="Marker3D" parent="SpawnPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 1.5, 2)
+
+[node name="StartLine" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+
+[node name="Mesh" type="MeshInstance3D" parent="StartLine"]
+mesh = SubResource("BoxMesh_large")
+
+[node name="Collision" type="CollisionShape3D" parent="StartLine"]
+shape = SubResource("BoxShape_large")
+
+[node name="Step1" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 1, -8)
+
+[node name="Mesh" type="MeshInstance3D" parent="Step1"]
+mesh = SubResource("BoxMesh_small")
+
+[node name="Collision" type="CollisionShape3D" parent="Step1"]
+shape = SubResource("BoxShape_small")
+
+[node name="Step2" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -14)
+
+[node name="Mesh" type="MeshInstance3D" parent="Step2"]
+mesh = SubResource("BoxMesh_small")
+
+[node name="Collision" type="CollisionShape3D" parent="Step2"]
+shape = SubResource("BoxShape_small")
+
+[node name="Step3" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 3, -22)
+
+[node name="Mesh" type="MeshInstance3D" parent="Step3"]
+mesh = SubResource("BoxMesh_small")
+
+[node name="Collision" type="CollisionShape3D" parent="Step3"]
+shape = SubResource("BoxShape_small")
+
+[node name="MovingBridge" type="AnimatableBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, -30)
+script = ExtResource("2_moving")
+move_offset = Vector3(0, 0, 8)
+duration = 3.0
+
+[node name="Mesh" type="MeshInstance3D" parent="MovingBridge"]
+transform = Transform3D(1.2, 0, 0, 0, 0.4, 0, 0, 0, 0.8, 0, 0, 0)
+mesh = SubResource("BoxMesh_small")
+
+[node name="Collision" type="CollisionShape3D" parent="MovingBridge"]
+transform = Transform3D(1.2, 0, 0, 0, 0.4, 0, 0, 0, 0.8, 0, 0, 0)
+shape = SubResource("BoxShape_small")
+
+[node name="Step4" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 5, -42)
+
+[node name="Mesh" type="MeshInstance3D" parent="Step4"]
+mesh = SubResource("BoxMesh_small")
+
+[node name="Collision" type="CollisionShape3D" parent="Step4"]
+shape = SubResource("BoxShape_small")
+
+[node name="Step5" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 6, -50)
+
+[node name="Mesh" type="MeshInstance3D" parent="Step5"]
+mesh = SubResource("BoxMesh_small")
+
+[node name="Collision" type="CollisionShape3D" parent="Step5"]
+shape = SubResource("BoxShape_small")
+
+[node name="FinishPlatform" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.5, -58)
+
+[node name="Mesh" type="MeshInstance3D" parent="FinishPlatform"]
+mesh = SubResource("BoxMesh_large")
+
+[node name="Collision" type="CollisionShape3D" parent="FinishPlatform"]
+shape = SubResource("BoxShape_large")
+
+[node name="FinishLine" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8, -62)
+
+[node name="Area3D" type="Area3D" parent="FinishLine"]
+collision_layer = 4
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FinishLine/Area3D"]
+shape = SubResource("BoxShape_finish")
+
+[node name="KillZone" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -8, -30)
+collision_layer = 8
+collision_mask = 2
+script = ExtResource("3_kill")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="KillZone"]
+shape = SubResource("BoxShape_kill")
