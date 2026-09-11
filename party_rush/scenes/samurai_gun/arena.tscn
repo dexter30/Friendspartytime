@@ -1,0 +1,226 @@
+[gd_scene load_steps=13 format=3 uid="uid://samurai_arena001"]
+
+[ext_resource type="Script" path="res://scripts/samurai_gun/arena.gd" id="1_arena"]
+[ext_resource type="Script" path="res://scripts/samurai_gun/smash_camera.gd" id="2_camera"]
+[ext_resource type="Script" path="res://scripts/samurai_gun/platform_visual.gd" id="3_platform"]
+
+[sub_resource type="RectangleShape2D" id="Rect_main"]
+size = Vector2(520, 36)
+
+[sub_resource type="RectangleShape2D" id="Rect_left"]
+size = Vector2(120, 20)
+
+[sub_resource type="RectangleShape2D" id="Rect_right"]
+size = Vector2(120, 20)
+
+[sub_resource type="RectangleShape2D" id="Rect_top"]
+size = Vector2(160, 20)
+
+[sub_resource type="Gradient" id="Gradient_bg"]
+colors = PackedColorArray(0.06, 0.07, 0.14, 1, 0.12, 0.14, 0.24, 1, 0.05, 0.06, 0.1, 1)
+offsets = PackedFloat32Array(0, 0.55, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture_bg"]
+gradient = SubResource("Gradient_bg")
+fill_from = Vector2(0.5, 0)
+fill_to = Vector2(0.5, 1)
+
+[sub_resource type="StyleBoxFlat" id="Style_panel"]
+bg_color = Color(0.08, 0.09, 0.16, 0.82)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.45, 0.5, 0.65, 0.8)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[node name="Arena" type="Node2D"]
+script = ExtResource("1_arena")
+
+[node name="Background" type="Sprite2D" parent="."]
+z_index = -10
+position = Vector2(0, 40)
+scale = Vector2(6, 4)
+texture = SubResource("GradientTexture_bg")
+
+[node name="StageArt" type="Node2D" parent="."]
+
+[node name="MainPlatform" type="StaticBody2D" parent="StageArt"]
+position = Vector2(0, 110)
+script = ExtResource("3_platform")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StageArt/MainPlatform"]
+shape = SubResource("Rect_main")
+
+[node name="LeftPlatform" type="StaticBody2D" parent="StageArt"]
+position = Vector2(-210, 10)
+script = ExtResource("3_platform")
+size = Vector2(120, 20)
+trim_color = Color(0.45, 0.48, 0.58, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StageArt/LeftPlatform"]
+shape = SubResource("Rect_left")
+
+[node name="RightPlatform" type="StaticBody2D" parent="StageArt"]
+position = Vector2(210, 10)
+script = ExtResource("3_platform")
+size = Vector2(120, 20)
+trim_color = Color(0.45, 0.48, 0.58, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StageArt/RightPlatform"]
+shape = SubResource("Rect_right")
+
+[node name="TopPlatform" type="StaticBody2D" parent="StageArt"]
+position = Vector2(0, -70)
+script = ExtResource("3_platform")
+size = Vector2(160, 20)
+trim_color = Color(0.45, 0.48, 0.58, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StageArt/TopPlatform"]
+shape = SubResource("Rect_top")
+
+[node name="SpawnPoints" type="Node2D" parent="."]
+
+[node name="Left" type="Marker2D" parent="SpawnPoints"]
+position = Vector2(-140, 40)
+
+[node name="Right" type="Marker2D" parent="SpawnPoints"]
+position = Vector2(140, 40)
+
+[node name="Fighters" type="Node2D" parent="."]
+
+[node name="SmashCamera" type="Camera2D" parent="."]
+position = Vector2(0, 20)
+zoom = Vector2(0.85, 0.85)
+script = ExtResource("2_camera")
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="TopBar" type="ColorRect" parent="UI"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 56.0
+color = Color(0.05, 0.06, 0.1, 0.55)
+
+[node name="Title" type="Label" parent="UI"]
+offset_left = 16.0
+offset_top = 8.0
+offset_right = 400.0
+offset_bottom = 40.0
+theme_override_colors/font_color = Color(1, 0.82, 0.35, 1)
+theme_override_font_sizes/font_size = 24
+text = "SAMURAI GUN"
+
+[node name="P1Panel" type="PanelContainer" parent="UI"]
+offset_left = 16.0
+offset_top = 64.0
+offset_right = 260.0
+offset_bottom = 150.0
+theme_override_styles/panel = SubResource("Style_panel")
+
+[node name="VBox" type="VBoxContainer" parent="UI/P1Panel"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="NameLabel" type="Label" parent="UI/P1Panel/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "P1"
+
+[node name="DamageLabel" type="Label" parent="UI/P1Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.75, 0.35, 1)
+theme_override_font_sizes/font_size = 28
+text = "0%"
+
+[node name="Stocks" type="HBoxContainer" parent="UI/P1Panel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="P2Panel" type="PanelContainer" parent="UI"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -260.0
+offset_top = 64.0
+offset_right = -16.0
+offset_bottom = 150.0
+grow_horizontal = 0
+theme_override_styles/panel = SubResource("Style_panel")
+
+[node name="VBox" type="VBoxContainer" parent="UI/P2Panel"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="NameLabel" type="Label" parent="UI/P2Panel/VBox"]
+layout_mode = 2
+horizontal_alignment = 2
+theme_override_font_sizes/font_size = 18
+text = "P2"
+
+[node name="DamageLabel" type="Label" parent="UI/P2Panel/VBox"]
+layout_mode = 2
+horizontal_alignment = 2
+theme_override_colors/font_color = Color(1, 0.75, 0.35, 1)
+theme_override_font_sizes/font_size = 28
+text = "0%"
+
+[node name="Stocks" type="HBoxContainer" parent="UI/P2Panel/VBox"]
+layout_mode = 2
+alignment = 2
+theme_override_constants/separation = 6
+
+[node name="CountdownLabel" type="Label" parent="UI"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -120.0
+offset_top = -60.0
+offset_right = 120.0
+offset_bottom = 60.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 0.9, 0.45, 1)
+theme_override_font_sizes/font_size = 72
+text = "3"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MessageLabel" type="Label" parent="UI"]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -240.0
+offset_top = -100.0
+offset_right = 240.0
+offset_bottom = -40.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 0.85, 0.35, 1)
+theme_override_font_sizes/font_size = 36
+text = "Winner!"
+horizontal_alignment = 1
+
+[node name="ControlsHint" type="Label" parent="UI"]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -420.0
+offset_top = -36.0
+offset_right = 420.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.75, 0.78, 0.85, 1)
+theme_override_font_sizes/font_size = 13
+text = "P1: A/D move • Space jump • F light • G heavy   |   P2: Arrows move • Enter jump • . light • ; heavy   |   Esc menu"
+horizontal_alignment = 1

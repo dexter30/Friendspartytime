@@ -1,0 +1,158 @@
+[gd_scene load_steps=3 format=3 uid="uid://samurai_charselect001"]
+
+[ext_resource type="Script" path="res://scripts/samurai_gun/character_select.gd" id="1_select"]
+
+[sub_resource type="StyleBoxFlat" id="Style_panel"]
+bg_color = Color(0.1, 0.11, 0.18, 0.92)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.55, 0.45, 0.25, 0.9)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[node name="CharacterSelect" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_select")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.06, 0.07, 0.13, 1)
+
+[node name="Layout" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 40.0
+offset_top = 28.0
+offset_right = -40.0
+offset_bottom = -28.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 18
+alignment = 1
+
+[node name="Title" type="Label" parent="Layout"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.82, 0.35, 1)
+theme_override_font_sizes/font_size = 46
+text = "SAMURAI GUN"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="Layout"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.75, 0.78, 0.88, 1)
+theme_override_font_sizes/font_size = 16
+text = "Choose your shape samurai — 5 stocks, side-view arena combat"
+horizontal_alignment = 1
+
+[node name="SelectRow" type="HBoxContainer" parent="Layout"]
+layout_mode = 2
+theme_override_constants/separation = 24
+alignment = 1
+
+[node name="P1Panel" type="PanelContainer" parent="Layout/SelectRow"]
+custom_minimum_size = Vector2(280, 260)
+layout_mode = 2
+theme_override_styles/panel = SubResource("Style_panel")
+
+[node name="VBox" type="VBoxContainer" parent="Layout/SelectRow/P1Panel"]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="PlayerLabel" type="Label" parent="Layout/SelectRow/P1Panel/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "PLAYER 1"
+
+[node name="Preview" type="Control" parent="Layout/SelectRow/P1Panel/VBox"]
+custom_minimum_size = Vector2(220, 120)
+layout_mode = 2
+
+[node name="NameLabel" type="Label" parent="Layout/SelectRow/P1Panel/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Circle Ronin"
+
+[node name="TagLabel" type="Label" parent="Layout/SelectRow/P1Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.74, 0.82, 1)
+theme_override_font_sizes/font_size = 13
+text = "Round and relentless"
+
+[node name="P2Panel" type="PanelContainer" parent="Layout/SelectRow"]
+custom_minimum_size = Vector2(280, 260)
+layout_mode = 2
+theme_override_styles/panel = SubResource("Style_panel")
+
+[node name="VBox" type="VBoxContainer" parent="Layout/SelectRow/P2Panel"]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="PlayerLabel" type="Label" parent="Layout/SelectRow/P2Panel/VBox"]
+layout_mode = 2
+horizontal_alignment = 2
+theme_override_font_sizes/font_size = 14
+text = "PLAYER 2"
+
+[node name="Preview" type="Control" parent="Layout/SelectRow/P2Panel/VBox"]
+custom_minimum_size = Vector2(220, 120)
+layout_mode = 2
+
+[node name="NameLabel" type="Label" parent="Layout/SelectRow/P2Panel/VBox"]
+layout_mode = 2
+horizontal_alignment = 2
+theme_override_font_sizes/font_size = 22
+text = "Block Samurai"
+
+[node name="TagLabel" type="Label" parent="Layout/SelectRow/P2Panel/VBox"]
+layout_mode = 2
+horizontal_alignment = 2
+theme_override_colors/font_color = Color(0.7, 0.74, 0.82, 1)
+theme_override_font_sizes/font_size = 13
+text = "Square deal, sharp steel"
+
+[node name="RosterGrid" type="GridContainer" parent="Layout"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 10
+columns = 3
+
+[node name="HintLabel" type="Label" parent="Layout"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.68, 0.72, 0.8, 1)
+theme_override_font_sizes/font_size = 13
+text = "Controls hint"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="FightButton" type="Button" parent="Layout"]
+custom_minimum_size = Vector2(240, 48)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 22
+text = "Fight!"
+
+[node name="BackHint" type="Label" parent="Layout"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.55, 0.58, 0.65, 1)
+theme_override_font_sizes/font_size = 12
+text = "Esc — Back to Main Menu"
+horizontal_alignment = 1

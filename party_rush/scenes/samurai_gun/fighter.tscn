@@ -1,0 +1,47 @@
+[gd_scene load_steps=7 format=3 uid="uid://samurai_fighter001"]
+
+[ext_resource type="Script" path="res://scripts/samurai_gun/fighter.gd" id="1_fighter"]
+[ext_resource type="Script" path="res://scripts/samurai_gun/fighter_visual.gd" id="2_visual"]
+[ext_resource type="Script" path="res://scripts/samurai_gun/hitbox.gd" id="3_hitbox"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape_body"]
+radius = 22.0
+height = 36.0
+
+[sub_resource type="RectangleShape2D" id="RectShape_light"]
+size = Vector2(42, 28)
+
+[sub_resource type="RectangleShape2D" id="RectShape_heavy"]
+size = Vector2(58, 36)
+
+[node name="Fighter" type="CharacterBody2D"]
+script = ExtResource("1_fighter")
+
+[node name="Visual" type="Node2D" parent="."]
+script = ExtResource("2_visual")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 4)
+shape = SubResource("CapsuleShape_body")
+
+[node name="LightHitbox" type="Area2D" parent="."]
+position = Vector2(34, 0)
+script = ExtResource("3_hitbox")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LightHitbox"]
+shape = SubResource("RectShape_light")
+
+[node name="HeavyHitbox" type="Area2D" parent="."]
+position = Vector2(40, -2)
+script = ExtResource("3_hitbox")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HeavyHitbox"]
+shape = SubResource("RectShape_heavy")
+
+[node name="Hurtbox" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+position = Vector2(0, 4)
+shape = SubResource("CapsuleShape_body")
