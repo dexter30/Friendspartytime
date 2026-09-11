@@ -152,6 +152,9 @@ var _intangible_timer := 0.0
 var _revival_timer := 0.0
 var _combo_timer := 0.0
 var _combo_step := -1
+## Attack pressed during endlag is queued so mashing chains cleanly.
+var _buffered_attack := ""
+var _buffer_timer := 0.0
 
 var _attack: Dictionary = {}
 var _attack_name := ""
@@ -185,6 +188,7 @@ func _ready() -> void:
 	_build_visuals()
 	if fighter_data.is_empty():
 		setup({"player_index": 0, "fighter_index": 0, "is_cpu": false}, FighterRoster.get_fighter(0))
+	_apply_data()
 
 
 func setup(new_selection: Dictionary, data: Dictionary) -> void:
@@ -369,6 +373,9 @@ func _tick_timers(delta: float) -> void:
 	_coyote_timer -= delta
 	_jump_buffer_timer -= delta
 	_combo_timer -= delta
+	_buffer_timer -= delta
+	if _buffer_timer <= 0.0:
+		_buffered_attack = ""
 	if _intangible_timer > 0.0 and state != State.REVIVAL:
 		_intangible_timer -= delta
 	if _drop_through_timer > 0.0:
@@ -570,6 +577,13 @@ func _process_attack(delta: float) -> void:
 	if not _attack_hit_spawned and _attack_time >= startup:
 		_attack_hit_spawned = true
 		_spawn_attack_hitbox()
+	if _attack_time >= startup + active:
+		if input_light_pressed:
+			_buffered_attack = "light"
+			_buffer_timer = 0.25
+		elif input_heavy_pressed:
+			_buffered_attack = "heavy"
+			_buffer_timer = 0.25
 	if _attack_time >= startup + active + endlag:
 		_end_attack()
 
@@ -647,6 +661,12 @@ func _end_attack() -> void:
 	_visual.charge = 0.0
 	_visual.expression = "normal"
 	state = State.FREE
+	if _buffered_attack != "":
+		var queued := _buffered_attack
+		_buffered_attack = ""
+		if absf(input_move.x) > 0.2:
+			facing = 1 if input_move.x > 0.0 else -1
+		_start_attack(_pick_light_move() if queued == "light" else _pick_heavy_move())
 
 
 func _cancel_attack() -> void:
@@ -657,6 +677,7 @@ func _cancel_attack() -> void:
 	_visual.charge = 0.0
 	_combo_timer = 0.0
 	_combo_step = -1
+	_buffered_attack = ""
 
 
 func _clear_hitboxes() -> void:

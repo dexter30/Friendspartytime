@@ -140,18 +140,19 @@ func _build_petals() -> void:
 	_petals.initial_velocity_max = 90.0
 	_petals.angular_velocity_min = -160.0
 	_petals.angular_velocity_max = 160.0
-	_petals.scale_amount_min = 3.0
-	_petals.scale_amount_max = 6.0
-	_petals.color = Color(1.0, 0.72, 0.82, 0.85)
+	_petals.scale_amount_min = 0.9
+	_petals.scale_amount_max = 1.8
+	_petals.color = Color(1.0, 0.72, 0.82, 0.9)
 	var texture := GradientTexture2D.new()
 	texture.width = 8
 	texture.height = 8
 	texture.fill = GradientTexture2D.FILL_RADIAL
 	texture.fill_from = Vector2(0.5, 0.5)
-	texture.fill_to = Vector2(0.9, 0.5)
+	texture.fill_to = Vector2(0.95, 0.5)
 	var gradient := Gradient.new()
 	gradient.set_color(0, Color(1.0, 1.0, 1.0, 1.0))
-	gradient.set_color(1, Color(1.0, 1.0, 1.0, 0.0))
+	gradient.add_point(0.7, Color(1.0, 1.0, 1.0, 1.0))
+	gradient.set_color(2, Color(1.0, 1.0, 1.0, 0.0))
 	texture.gradient = gradient
 	_petals.texture = texture
 	_petals.z_index = 5
@@ -162,7 +163,7 @@ func _draw_far(drawer: Node2D) -> void:
 	for star in _stars:
 		var twinkle := 0.6 + 0.4 * sin(_time * 2.0 + star.x * 0.01)
 		drawer.draw_circle(Vector2(star.x, star.y), star.z, Color(1.0, 0.98, 0.9, twinkle))
-	var moon := Vector2(420.0, -560.0)
+	var moon := Vector2(-420.0, -330.0)
 	drawer.draw_circle(moon, 190.0, Color(1.0, 0.93, 0.7, 0.12))
 	drawer.draw_circle(moon, 150.0, Color(1.0, 0.94, 0.75, 0.2))
 	drawer.draw_circle(moon, 120.0, Color(0.98, 0.94, 0.8))

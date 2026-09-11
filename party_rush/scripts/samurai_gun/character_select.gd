@@ -28,6 +28,7 @@ var _starting := false
 func _ready() -> void:
 	Engine.time_scale = 1.0
 	_footer.text = "P1: WASD move · Space jump · F light · G heavy      P2: Arrows · Enter · / light · . heavy      P3: IJKL · U jump · O light · P heavy      Gamepads: Stick · A · X · B      Esc: menu"
+	_build_backdrop()
 	_build_grid()
 	_build_slots()
 	_cursor_layer = Node2D.new()
@@ -168,6 +169,50 @@ func _start_match() -> void:
 
 # --- Building the screen --------------------------------------------------------------
 
+func _build_backdrop() -> void:
+	var backdrop := Node2D.new()
+	backdrop.name = "Backdrop"
+	backdrop.draw.connect(_draw_backdrop.bind(backdrop))
+	add_child(backdrop)
+	move_child(backdrop, 1)
+	var petals := CPUParticles2D.new()
+	petals.amount = 40
+	petals.lifetime = 8.0
+	petals.preprocess = 8.0
+	petals.emission_shape = CPUParticles2D.EMISSION_SHAPE_RECTANGLE
+	petals.emission_rect_extents = Vector2(760.0, 10.0)
+	petals.position = Vector2(700.0, -20.0)
+	petals.direction = Vector2(-0.4, 1.0)
+	petals.spread = 15.0
+	petals.gravity = Vector2(-10.0, 30.0)
+	petals.initial_velocity_min = 40.0
+	petals.initial_velocity_max = 80.0
+	petals.scale_amount_min = 2.0
+	petals.scale_amount_max = 4.0
+	petals.color = Color(1.0, 0.7, 0.8, 0.5)
+	backdrop.add_child(petals)
+
+
+func _draw_backdrop(node: Node2D) -> void:
+	var size := get_viewport_rect().size
+	var moon := Vector2(size.x - 150.0, 120.0)
+	node.draw_circle(moon, 150.0, Color(1.0, 0.93, 0.7, 0.05))
+	node.draw_circle(moon, 100.0, Color(1.0, 0.94, 0.75, 0.08))
+	node.draw_circle(moon, 78.0, Color(0.98, 0.94, 0.8, 0.9))
+	node.draw_circle(moon + Vector2(-26.0, -14.0), 14.0, Color(0.9, 0.86, 0.72))
+	node.draw_circle(moon + Vector2(22.0, 26.0), 9.0, Color(0.9, 0.86, 0.72))
+	var ridge := PackedVector2Array([Vector2(0.0, size.y), Vector2(0.0, size.y - 120.0)])
+	var x := 0.0
+	var i := 0
+	while x < size.x:
+		ridge.append(Vector2(x, size.y - 120.0 - absf(sin(i * 1.9)) * 90.0))
+		x += 160.0
+		i += 1
+	ridge.append(Vector2(size.x, size.y - 120.0))
+	ridge.append(Vector2(size.x, size.y))
+	node.draw_colored_polygon(ridge, Color(0.1, 0.07, 0.17))
+
+
 func _build_grid() -> void:
 	var count := FighterRoster.count()
 	var rows := int(ceil(count / float(GRID_COLUMNS)))
@@ -181,7 +226,8 @@ func _build_grid() -> void:
 		var data := FighterRoster.get_fighter(i)
 		var col := i % GRID_COLUMNS
 		var row := int(i / float(GRID_COLUMNS))
-		var cell := PanelContainer.new()
+		# A plain Panel (not a container) so the portrait and name keep manual positions.
+		var cell := Panel.new()
 		cell.position = Vector2(col * (CELL_SIZE.x + CELL_GAP), row * (CELL_SIZE.y + CELL_GAP))
 		cell.size = CELL_SIZE
 		cell.pivot_offset = CELL_SIZE * 0.5
@@ -194,16 +240,17 @@ func _build_grid() -> void:
 		_grid_holder.add_child(cell)
 
 		var visual := FighterVisual.new()
-		visual.radius = 38.0
-		visual.position = Vector2(CELL_SIZE.x * 0.5, 62.0)
+		visual.radius = 36.0
+		visual.position = Vector2(CELL_SIZE.x * 0.5, 58.0)
 		visual.set_fighter(data)
 		cell.add_child(visual)
 
 		var name_label := Label.new()
 		name_label.text = data["name"]
 		name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		name_label.position = Vector2(0.0, CELL_SIZE.y - 38.0)
-		name_label.size = Vector2(CELL_SIZE.x, 30.0)
+		name_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		name_label.position = Vector2(0.0, CELL_SIZE.y - 40.0)
+		name_label.size = Vector2(CELL_SIZE.x, 32.0)
 		name_label.add_theme_font_size_override("font_size", 17)
 		name_label.add_theme_color_override("font_color", data["color"].lightened(0.35))
 		name_label.add_theme_color_override("font_outline_color", Color(0.05, 0.03, 0.08))
@@ -312,7 +359,7 @@ func _refresh_slot_panels() -> void:
 func _pop_cell(index: int) -> void:
 	if index < 0 or index >= _cells.size():
 		return
-	var panel: PanelContainer = _cells[index]["panel"]
+	var panel: Panel = _cells[index]["panel"]
 	var tween := panel.create_tween()
 	tween.tween_property(panel, "scale", Vector2(1.08, 1.08), 0.06)
 	tween.tween_property(panel, "scale", Vector2.ONE, 0.25).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
