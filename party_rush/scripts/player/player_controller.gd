@@ -29,6 +29,9 @@ const DASH_GHOST_INTERVAL := 0.035
 const BUMP_FORCE := 4.0
 const STUN_DURATION := 0.6
 
+## Speed bonus for the player who is "it" in tag.
+const IT_SPEED_MULTIPLIER := 1.15
+
 const LEAN_ANGLE := 0.2
 const RUN_BOB_SPEED := 15.0
 const RUN_BOB_HEIGHT := 0.07
@@ -44,6 +47,7 @@ var is_stunned := false
 var can_move := true
 var goal_reached := false
 var is_dashing := false
+var speed_multiplier := 1.0
 
 var _stun_timer := 0.0
 var _coyote_timer := 0.0
@@ -58,6 +62,7 @@ var _run_phase := 0.0
 var _idle_time := 0.0
 
 var _squash_tween: Tween
+var _flash_tween: Tween
 var _body_material: StandardMaterial3D
 var _dash_smoke: CPUParticles3D
 var _land_dust: CPUParticles3D
@@ -95,6 +100,7 @@ func reset_state() -> void:
 	can_move = true
 	goal_reached = false
 	is_dashing = false
+	speed_multiplier = 1.0
 	_stun_timer = 0.0
 	_coyote_timer = 0.0
 	_jump_buffer_timer = 0.0
@@ -105,10 +111,13 @@ func reset_state() -> void:
 	velocity = Vector3.ZERO
 	if _squash_tween:
 		_squash_tween.kill()
+	if _flash_tween:
+		_flash_tween.kill()
 	if _visuals:
 		_visuals.scale = Vector3.ONE
 		_visuals.position = Vector3.ZERO
 		_visuals.rotation = Vector3.ZERO
+		_set_visual_transparency(0.0)
 	if _dash_smoke:
 		_dash_smoke.emitting = false
 	if _run_dust:
@@ -160,7 +169,7 @@ func _physics_process(delta: float) -> void:
 		rotation.y = lerp_angle(rotation.y, target_yaw, ROTATION_SPEED * delta)
 
 	var control := 1.0 if is_on_floor() else AIR_CONTROL
-	var target_velocity := direction * MOVE_SPEED
+	var target_velocity := direction * MOVE_SPEED * speed_multiplier
 	var rate := (GROUND_ACCELERATION if has_input else GROUND_DECELERATION) * control
 	velocity.x = move_toward(velocity.x, target_velocity.x, rate * delta)
 	velocity.z = move_toward(velocity.z, target_velocity.z, rate * delta)
@@ -349,9 +358,38 @@ func apply_bump(from: Vector3) -> void:
 
 func set_is_it(value: bool) -> void:
 	is_it = value
+	speed_multiplier = IT_SPEED_MULTIPLIER if value else 1.0
 	_update_indicator()
 	if value:
 		_play_squash(Vector3(0.85, 1.2, 0.85), 0.3)
+
+
+## Teleports the player (e.g. after falling off) and flashes them so the drop-in is readable.
+func respawn_at(spawn_position: Vector3) -> void:
+	if is_dashing:
+		_end_dash()
+	is_stunned = false
+	_stun_timer = 0.0
+	_jump_held_since_takeoff = false
+	global_position = spawn_position
+	velocity = Vector3.ZERO
+	_play_squash(Vector3(0.7, 1.4, 0.7), 0.45)
+	_flash()
+
+
+func _flash() -> void:
+	if _flash_tween:
+		_flash_tween.kill()
+	_set_visual_transparency(0.0)
+	_flash_tween = create_tween().set_loops(5)
+	_flash_tween.tween_method(_set_visual_transparency, 0.0, 0.8, 0.1)
+	_flash_tween.tween_method(_set_visual_transparency, 0.8, 0.0, 0.1)
+
+
+func _set_visual_transparency(value: float) -> void:
+	for child in _visuals.get_children():
+		if child is GeometryInstance3D:
+			(child as GeometryInstance3D).transparency = value
 
 
 func set_has_bomb(value: bool) -> void:
@@ -383,7 +421,7 @@ func _play_squash(target: Vector3, duration: float) -> void:
 
 func _update_body_animation(delta: float) -> void:
 	var horizontal_speed := Vector2(velocity.x, velocity.z).length()
-	var speed_ratio := clampf(horizontal_speed / MOVE_SPEED, 0.0, 1.5)
+	var speed_ratio := clampf(horizontal_speed / (MOVE_SPEED * speed_multiplier), 0.0, 1.5)
 
 	var target_lean := -LEAN_ANGLE * speed_ratio
 	if is_dashing:
