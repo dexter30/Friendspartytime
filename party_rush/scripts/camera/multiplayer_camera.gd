@@ -12,11 +12,14 @@ extends Camera3D
 @export var follow_speed: float = 5.0
 @export var rotation_speed: float = 3.0
 @export var spread_multiplier: float = 0.85
+@export var shake_strength: float = 0.35
 
 var _target_players: Array[Node3D] = []
 var _smoothed_center: Vector3 = Vector3.ZERO
 var _smoothed_distance: float = base_distance
 var _current_yaw: float = 0.0
+var _initialized: bool = false
+var _trauma: float = 0.0
 
 
 func _ready() -> void:
@@ -29,6 +32,12 @@ func set_targets(players: Array) -> void:
 	for p in players:
 		if p is Node3D:
 			_target_players.append(p)
+	_initialized = false
+
+
+## Adds screen shake; stacks up to 1.0 and decays over time.
+func add_trauma(amount: float) -> void:
+	_trauma = clampf(_trauma + amount, 0.0, 1.0)
 
 
 func _physics_process(delta: float) -> void:
@@ -69,7 +78,8 @@ func _physics_process(delta: float) -> void:
 
 	var target_yaw := atan2(avg_forward.x, avg_forward.z)
 
-	if _smoothed_center == Vector3.ZERO:
+	if not _initialized:
+		_initialized = true
 		_smoothed_center = center
 		_smoothed_distance = target_distance
 		_current_yaw = target_yaw
@@ -89,3 +99,16 @@ func _physics_process(delta: float) -> void:
 
 	global_position = _smoothed_center + offset
 	look_at(look_target, Vector3.UP)
+	_apply_shake(delta)
+
+
+func _apply_shake(delta: float) -> void:
+	if _trauma <= 0.0:
+		h_offset = 0.0
+		v_offset = 0.0
+		return
+	_trauma = maxf(_trauma - delta * 1.8, 0.0)
+	var shake := _trauma * _trauma * shake_strength
+	var t := Time.get_ticks_msec() * 0.001
+	h_offset = sin(t * 47.0) * shake
+	v_offset = cos(t * 53.0) * shake
