@@ -8,11 +8,12 @@ extends Control
 
 func _ready() -> void:
 	_start_button.pressed.connect(_on_start_pressed)
-	_controls_label.text = """Controls:
-  Red   — WASD + Space
-  Blue  — Arrow Keys + Enter
-  Yellow — IJKL + U
-  Gamepads supported (up to 3)"""
+	_controls_label.text = """Controls (Move / Jump / Dash):
+  Red    — WASD / Space / Shift
+  Blue   — Arrows / Enter / Slash
+  Yellow — IJKL / U / O
+  Gamepad — Stick / A / B or X (up to 3 pads)
+  Tap jump for a short hop, hold for full height"""
 
 	var minigame_list := ""
 	for i in range(GameState.MINIGAME_NAMES.size()):

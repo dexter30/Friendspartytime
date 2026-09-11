@@ -16,13 +16,19 @@ Race, tag, and pass the bomb across four mini-games. First player to **3 wins** 
 
 ## Controls
 
-| Player | Color  | Move              | Jump   |
-|--------|--------|-------------------|--------|
-| 1      | Red    | W A S D           | Space  |
-| 2      | Blue   | Arrow Keys        | Enter  |
-| 3      | Yellow | I J K L           | U      |
+| Player | Color  | Move        | Jump   | Dash  |
+|--------|--------|-------------|--------|-------|
+| 1      | Red    | W A S D     | Space  | Shift |
+| 2      | Blue   | Arrow Keys  | Enter  | /     |
+| 3      | Yellow | I J K L     | U      | O     |
 
-Up to **3 gamepads** are supported (joypad 0 → Red, 1 → Blue, 2 → Yellow). Keyboard is used as fallback when a gamepad slot is empty.
+Up to **3 gamepads** are supported (pad 0 → Red, 1 → Blue, 2 → Yellow): left stick to move, **A** to jump, **B** or **X** to dash. Keyboard and gamepad work at the same time.
+
+### Movement feel
+
+- **Variable jump height** — tap for a short hop, hold for full height. Coyote time and jump buffering make ledge jumps forgiving.
+- **Dash** — a short burst in your facing/input direction with a smoke trail and colored afterimages. One air dash per jump; short cooldown. Jump out of a grounded dash to keep momentum.
+- **Squash & stretch** — players stretch on takeoff, squish on landing (scaled by fall speed), lean into runs, bob while running, and puff dust on landings and sprints.
 
 ## Mini-Games
 
