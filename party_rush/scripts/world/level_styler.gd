@@ -22,6 +22,8 @@ func _apply_materials(node: Node) -> void:
 			mat.albedo_color = accent_color
 			mat.emission_enabled = true
 			mat.emission = accent_color * 0.5
+		elif "curb" in name_lower:
+			mat.albedo_color = accent_color.darkened(0.15)
 		else:
 			mat.albedo_color = platform_color
 		mat.roughness = 0.7
