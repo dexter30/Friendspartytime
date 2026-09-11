@@ -13,11 +13,14 @@ var _current_minigame: MinigameBase = null
 var _round_timer: float = 0.0
 var _countdown: float = 0.0
 var _state: String = "countdown"
+var _last_countdown_text: String = ""
 
 
 func _ready() -> void:
 	GameState.reset_match()
 	GameState.is_playing = true
+	_countdown_label.pivot_offset = _countdown_label.size / 2.0
+	_status_label.pivot_offset = _status_label.size / 2.0
 	_spawn_players_offscreen()
 	_load_next_minigame()
 
@@ -46,12 +49,13 @@ func _load_next_minigame() -> void:
 	_camera.set_targets(_current_minigame.get_camera_targets())
 
 	var minigame_name := GameState.MINIGAME_NAMES[(GameState.current_minigame_index - 1 + GameState.MINIGAME_NAMES.size()) % GameState.MINIGAME_NAMES.size()]
-	_status_label.text = minigame_name
+	_set_status(minigame_name)
 	GameState.minigame_started.emit(minigame_name)
 
 	_countdown = _current_minigame.countdown_seconds
 	_state = "countdown"
 	_countdown_label.visible = true
+	_last_countdown_text = ""
 	_update_countdown_display()
 
 
@@ -76,10 +80,31 @@ func _process(delta: float) -> void:
 
 func _update_countdown_display() -> void:
 	var num := int(ceil(_countdown))
-	if num > 0:
-		_countdown_label.text = str(num)
-	else:
-		_countdown_label.text = "GO!"
+	var text := str(num) if num > 0 else "GO!"
+	if text == _last_countdown_text:
+		return
+	_last_countdown_text = text
+	_countdown_label.text = text
+	_pop_label(_countdown_label, 1.8 if num <= 0 else 1.5)
+
+
+func _set_status(text: String) -> void:
+	_status_label.text = text
+	_status_label.modulate.a = 0.0
+	_status_label.scale = Vector2(0.8, 0.8)
+	var tween := _status_label.create_tween().set_parallel(true)
+	tween.tween_property(_status_label, "modulate:a", 1.0, 0.25)
+	tween.tween_property(_status_label, "scale", Vector2.ONE, 0.4) \
+		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+
+
+func _pop_label(label: Label, from_scale: float) -> void:
+	label.scale = Vector2.ONE * from_scale
+	label.modulate.a = 0.0
+	var tween := label.create_tween().set_parallel(true)
+	tween.tween_property(label, "scale", Vector2.ONE, 0.35) \
+		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_property(label, "modulate:a", 1.0, 0.12)
 
 
 func _update_timer_display() -> void:
@@ -106,7 +131,7 @@ func _handle_time_up() -> void:
 
 func _on_minigame_finished(winner_index: int, message: String) -> void:
 	_state = "results"
-	_status_label.text = message
+	_set_status(message)
 	GameState.add_score(winner_index)
 	GameState.minigame_ended.emit(winner_index, message)
 	GameState.rounds_played += 1
@@ -121,7 +146,7 @@ func _on_minigame_finished(winner_index: int, message: String) -> void:
 
 func _show_match_results() -> void:
 	var winner := GameState.get_match_winner_index()
-	_status_label.text = "%s wins the match!" % GameState.PLAYER_NAMES[winner]
+	_set_status("%s wins the match!" % GameState.PLAYER_NAMES[winner])
 	GameState.match_ended.emit(winner)
 	GameState.is_playing = false
 	await get_tree().create_timer(4.0).timeout

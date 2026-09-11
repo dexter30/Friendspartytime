@@ -26,11 +26,14 @@ func setup_round(spawned_players: Array[PlayerController]) -> void:
 		var spawn := _get_spawn_position(i)
 		players[i].setup(i, spawn)
 		players[i].reset_state()
+		players[i].set_can_move(false)
 		_connect_player(players[i])
 
 
 func start_round() -> void:
 	is_running = true
+	for player in players:
+		player.set_can_move(true)
 
 
 func end_round(winner_index: int, message: String) -> void:
