@@ -35,13 +35,17 @@ Up to **3 gamepads** are supported (pad 0 → Red, 1 → Blue, 2 → Yellow): le
 | Game | Objective |
 |------|-----------|
 | **Flag Rush** | Platform to the flag — first to reach it wins |
-| **Tag Frenzy** | One player is "it" — tag others to pass the role; most tags when time runs out wins |
+| **Tag Frenzy** | One player is "it" and runs slightly faster — touch someone to pass the role; most tags when time runs out wins |
 | **Bomb Pass** | Hot potato — bump into another player to pass the bomb before it explodes |
 | **Platform Race** | Obstacle course — first across the finish line wins |
 
 ## Camera
 
-The camera uses a **Lego-style third-person** system: it tracks the midpoint of all three players, pulls back when they spread apart, and orbits slightly behind their average heading.
+A **fixed isometric-style camera** frames the entire map for every mini-game. Maps are compact (~24x24 units) so everyone is always on screen. The camera computes the map's bounds from the level geometry (including moving-platform travel) and positions itself at a constant pitch/yaw so the whole thing fits, re-fitting on window resize and easing between maps. Toggle `use_orthographic` on the `ArenaCamera` node for a true orthographic look.
+
+## Falling off
+
+Players who fall off a map are dropped back in above their spawn point with a flashing effect. Tag Frenzy and Bomb Pass are fenced with invisible walls (marked by a low curb) so nobody falls out of the action.
 
 ## Project Structure
 
@@ -56,9 +60,9 @@ party_rush/
 └── scripts/
     ├── autoload/         # GameState (scores, round flow)
     ├── player/           # PlayerController
-    ├── camera/           # MultiplayerCamera (Lego-style follow)
+    ├── camera/           # ArenaCamera (fixed isometric, auto-framing)
     ├── minigames/        # Per-minigame logic
-    └── world/            # Moving platforms, kill zones, level styling
+    └── world/            # Moving platforms, level styling
 ```
 
 ## License
